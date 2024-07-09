@@ -3,33 +3,33 @@ import { Link } from "react-router-dom";
 import { Context } from "../store/appContext";
 import "../../styles/home.css";
 
-export const Home = () => {
+export const Vehicles = () => {
     const { store, actions } = useContext(Context);
 
     useEffect(() => {
-        actions.loadPeople();
+        actions.loadVehicles();
     }, []);
 
     return (
         <div className="text-center mt-5">
-            <h1>Star Wars Characters</h1>
+            <h1>Star Wars Vehicles</h1>
             <div className="row">
-                {store.people.map((person, index) => (
-                    <div key={index} className="col-3">
+                {store.vehicles.map((vehicle) => (
+                    <div key={vehicle.uid} className="col-3">
                         <div className="card">
                             <img 
-                                src={`https://starwars-visualguide.com/assets/img/characters/${person.uid}.jpg`} 
+                                src={`https://starwars-visualguide.com/assets/img/vehicles/${vehicle.uid}.jpg`} 
                                 className="card-img-top" 
-                                alt={person.name} 
+                                alt={vehicle.name} 
                                 onError={(e) => e.target.src = "https://via.placeholder.com/150"} 
                             />
                             <div className="card-body">
-                                <h5 className="card-title">{person.name}</h5>
-                                <Link to={`/single/${person.uid}`}>
+                                <h5 className="card-title">{vehicle.name}</h5>
+                                <Link to={`/single/${vehicle.uid}`}>
                                     <button className="btn btn-primary">Learn more</button>
                                 </Link>
-                                <button className="btn btn-success" onClick={() => actions.addFavorite(person.name)}>Add to Favorites</button>
-                                <button className="btn btn-danger" onClick={() => actions.removeFavorite(person.name)}>Remove from Favorites</button>
+                                <button className="btn btn-success" onClick={() => actions.addFavorite(vehicle.name)}>Add to Favorites</button>
+                                <button className="btn btn-danger" onClick={() => actions.removeFavorite(vehicle.name)}>Remove from Favorites</button>
                             </div>
                         </div>
                     </div>
@@ -44,4 +44,3 @@ export const Home = () => {
         </div>
     );
 };
-

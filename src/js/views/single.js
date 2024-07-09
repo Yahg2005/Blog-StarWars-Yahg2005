@@ -1,26 +1,45 @@
 import React, { useState, useEffect, useContext } from "react";
-import PropTypes from "prop-types";
-import { Link, useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { Context } from "../store/appContext";
 
-export const Single = props => {
-	const { store, actions } = useContext(Context);
-	const params = useParams();
-	return (
-		<div className="jumbotron">
-			<h1 className="display-4">This will show the demo element: {store.demo[params.theid].title}</h1>
+export const Single = () => {
+    const { store, actions } = useContext(Context);
+    const params = useParams();
+    const [details, setDetails] = useState(null);
 
-			<hr className="my-4" />
+    useEffect(() => {
+        const fetchDetails = async () => {
+            try {
+                const response = await fetch(`https://swapi.tech/api/people/${params.theid}`);
+                if (!response.ok) throw new Error('Network response was not ok');
+                const data = await response.json();
+                setDetails(data.result.properties);
+            } catch (error) {
+                console.error("Error fetching details:", error);
+            }
+        };
 
-			<Link to="/">
-				<span className="btn btn-primary btn-lg" href="#" role="button">
-					Back home
-				</span>
-			</Link>
-		</div>
-	);
-};
+        fetchDetails();
+    }, [params.theid]);
 
-Single.propTypes = {
-	match: PropTypes.object
+    return (
+        <div className="jumbotron">
+            {details ? (
+                <>
+                    <h1 className="display-4">{details.name}</h1>
+                    <p className="lead">Gender: {details.gender}</p>
+                    <p className="lead">Birth Year: {details.birth_year}</p>
+                    <p className="lead">Height: {details.height}</p>
+                    <p className="lead">Mass: {details.mass}</p>
+                    <p className="lead">Hair Color: {details.hair_color}</p>
+                    <hr className="my-4" />
+                    <Link className="btn btn-primary btn-lg" to="/" role="button">
+                        Back home
+                    </Link>
+                </>
+            ) : (
+                <p>Loading...</p>
+            )}
+        </div>
+    );
 };
